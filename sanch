@@ -1,0 +1,35 @@
+app.get('/',async (req, res) => {
+
+    const newuser = new user({
+        empID : "Employee3",
+        skills : [{
+            key : "UNQKy5",
+            proficiency : 1
+        },
+        {
+            key : "UNQKy6",
+            proficiency : 1
+        }]
+    })
+   await newuser.save();
+})
+
+
+try {
+    const { empID, newSkills } = req.body;
+    const user = await user.findOne({ empID });
+
+    if (user) {
+      user.skills = newSkills;
+      await user.save();
+      res.send('User skills updated successfully');
+    } else {
+      const useradder = new user({
+          empID : empID,
+          skills : newSkills
+      });
+      useradder.save();
+    }
+  } catch (error) {
+    res.status(500).send('Error updating user skills');
+  }
